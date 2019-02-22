@@ -1,0 +1,9 @@
+C:\Users\Q00\Desktop\SDK(WI~1\SDK(Windows)\RFID Reader\TagInventory\run\TagInventory.exe
+C:\Users\Q00\Desktop\SDK(WI~1\SDK(Windows)\RFID Reader\TagInventory\run\TagInventory.pdb
+C:\Users\Q00\Desktop\SDK(WI~1\SDK(Windows)\RFID Reader\TagInventory\TagInventory\obj\Release\TagInventory.csprojAssemblyReference.cache
+C:\Users\Q00\Desktop\SDK(WI~1\SDK(Windows)\RFID Reader\TagInventory\TagInventory\obj\Release\TagInventory.MainFrm.resources
+C:\Users\Q00\Desktop\SDK(WI~1\SDK(Windows)\RFID Reader\TagInventory\TagInventory\obj\Release\TagInventory.Properties.Resources.resources
+C:\Users\Q00\Desktop\SDK(WI~1\SDK(Windows)\RFID Reader\TagInventory\TagInventory\obj\Release\TagInventory.csproj.GenerateResource.cache
+C:\Users\Q00\Desktop\SDK(WI~1\SDK(Windows)\RFID Reader\TagInventory\TagInventory\obj\Release\TagInventory.csproj.CoreCompileInputs.cache
+C:\Users\Q00\Desktop\SDK(WI~1\SDK(Windows)\RFID Reader\TagInventory\TagInventory\obj\Release\TagInventory.exe
+C:\Users\Q00\Desktop\SDK(WI~1\SDK(Windows)\RFID Reader\TagInventory\TagInventory\obj\Release\TagInventory.pdb
