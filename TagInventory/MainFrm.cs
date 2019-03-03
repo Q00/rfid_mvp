@@ -24,7 +24,7 @@ namespace TagInventory
         private bool bInventoryFlg = false;
         private Thread inventoryThrd = null;
         static private Thread prodThrd = null;
-        private Dictionary<string, int> prodPriceDict = new Dictionary<string, int>();
+        static private Dictionary<string, int> prodPriceDict = new Dictionary<string, int>();
         static private Dictionary<string, string> prodUIDDict = new Dictionary<string, string>();
         static private List<string> addUidList = new List<string>();
         public MainFrm()
@@ -303,13 +303,13 @@ namespace TagInventory
         /// 쓰레드 불러주는 함수
         /// </summary>
         /// <param name="prod"></param>
-        private void prod_button_function(string prod)
+        private void prod_button_function(string prod, string price)
         {
             try
             {
                 buttonStop.Enabled = false;
                 bInventoryFlg = false;
-                Mapping map = new Mapping(prod);
+                Mapping map = new Mapping(prod, Convert.ToInt32(price));
                 prodThrd = new Thread(map.ThreadProd);
                 prodThrd.Start();
                 prodThrd.Join();
@@ -349,7 +349,7 @@ namespace TagInventory
         /// <param name="e"></param>
         private void apply_button_Click(object sender, EventArgs e)
         {
-            prod_button_function("콜라");
+            prod_button_function(nametxt.Text, pricetxt.Text);
         }
         
         /// <summary>
@@ -359,10 +359,12 @@ namespace TagInventory
         {
             // State information used in the task.
             private string prod;
+            private int price;
             // The constructor obtains the state information.
-            public Mapping(string prod)
+            public Mapping(string prod, int price)
             {
                 this.prod = prod;
+                this.price = price;
 
             }
 
@@ -373,6 +375,7 @@ namespace TagInventory
                     try
                     {
                         prodUIDDict.Add(uid, prod);
+                        prodPriceDict.Add(prod, price);
                     }
                     catch
                     {
