@@ -13,40 +13,32 @@ namespace TagInventory
     {
         private UIntPtr hReader = UIntPtr.Zero;
         private UIntPtr InvenParamSpecList = UIntPtr.Zero;
-        private int coke= 0;
-        private int soda= 0;
-        private int milk= 0;
-        private int coffee= 0;
-        private int salad= 0;
+        private int coke = 0;
+        private int soda = 0;
+        private int milk = 0;
+        private int coffee = 0;
+        private int salad = 0;
+
  
 
         private bool bInventoryFlg = false;
         private Thread inventoryThrd = null;
         static private Thread prodThrd = null;
-        private Dictionary<string, int> prodPriceDict = new Dictionary<string, int>()
-        {
-            {"콜라", 1000 },
-            {"사이다", 1200 },
-            {"우유", 800 },
-            {"커피", 3200 },
-            {"샐러드", 5000 }
-        };
+        private Dictionary<string, int> prodPriceDict = new Dictionary<string, int>();
         static private Dictionary<string, string> prodUIDDict = new Dictionary<string, string>();
         static private List<string> addUidList = new List<string>();
         public MainFrm()
         {
-            
+
             InitializeComponent();
-            comboBoxCommunication.Items.Add("COM");
-            comboBoxCommunication.Items.Add("NET");
-            comboBoxCommunication.SelectedIndex = 0;
+
 
             RFIDLIB.rfidlib_reader.RDR_LoadReaderDrivers(@"\Drivers");
             UInt32 nComCount = RFIDLIB.rfidlib_reader.COMPort_Enum();
             for (UInt32 j = 0; j < nComCount; j++)
             {
                 StringBuilder nameBuf = new StringBuilder();
-                nameBuf.Append('\0',128);
+                nameBuf.Append('\0', 128);
                 RFIDLIB.rfidlib_reader.COMPort_GetEnumItem(j, nameBuf, 128);
                 comboBoxCOM.Items.Add(nameBuf.ToString());
             }
@@ -62,8 +54,7 @@ namespace TagInventory
             comboBoxFrame.Items.Add("8O1");
             comboBoxFrame.Items.Add("8N1");
             comboBoxFrame.SelectedIndex = 0;
-
-            comboBoxCommunication.Enabled = true;
+            
             buttonOpen.Enabled = true;
             buttonClose.Enabled = false;
             comboBoxCOM.Enabled = true;
@@ -76,47 +67,41 @@ namespace TagInventory
         private void buttonOpen_Click(object sender, EventArgs e)
         {
             String connstr = "";
-            switch (comboBoxCommunication.SelectedIndex)
-            {
-                case 0:
-                    connstr = RFIDLIB.rfidlib_def.CONNSTR_NAME_RDTYPE + "=" + "RD5100" + ";" +
-                        RFIDLIB.rfidlib_def.CONNSTR_NAME_COMMTYPE + "=" + RFIDLIB.rfidlib_def.CONNSTR_NAME_COMMTYPE_COM + ";" +
-                        RFIDLIB.rfidlib_def.CONNSTR_NAME_COMNAME + "=" + comboBoxCOM.Text + ";" +
-                        RFIDLIB.rfidlib_def.CONNSTR_NAME_COMBARUD + "=" + comboBoxBaud.Text + ";" +
-                        RFIDLIB.rfidlib_def.CONNSTR_NAME_COMFRAME + "=" + comboBoxFrame.Text + ";" +
-                        RFIDLIB.rfidlib_def.CONNSTR_NAME_BUSADDR + "=" + "255";
-                    break;
-                default:
-                    break;
-            }
+
+            connstr = RFIDLIB.rfidlib_def.CONNSTR_NAME_RDTYPE + "=" + "RD5100" + ";" +
+                RFIDLIB.rfidlib_def.CONNSTR_NAME_COMMTYPE + "=" + RFIDLIB.rfidlib_def.CONNSTR_NAME_COMMTYPE_COM + ";" +
+                RFIDLIB.rfidlib_def.CONNSTR_NAME_COMNAME + "=" + comboBoxCOM.Text + ";" +
+                RFIDLIB.rfidlib_def.CONNSTR_NAME_COMBARUD + "=" + comboBoxBaud.Text + ";" +
+                RFIDLIB.rfidlib_def.CONNSTR_NAME_COMFRAME + "=" + comboBoxFrame.Text + ";" +
+                RFIDLIB.rfidlib_def.CONNSTR_NAME_BUSADDR + "=" + "255";
 
 
-            //dataGridViewTag.Rows.Clear();
-            //dataGridViewTag.Rows.Add(5);
-            //dataGridViewTag[0, 0].Value = "123";
-            //dataGridViewTag[1, 0].Value = "등록필요";
-            //dataGridViewTag[0, 1].Value = "12345";
-            //dataGridViewTag[1, 1].Value = "등록필요";
-            //dataGridViewTag[0, 2].Value = "1236";
-            //dataGridViewTag[1, 2].Value = "등록필요";
+
+            dataGridViewTag.Rows.Clear();
+            dataGridViewTag.Rows.Add(3);
+            dataGridViewTag[0, 0].Value = "123";
+            dataGridViewTag[1, 0].Value = "등록필요";
+            dataGridViewTag[0, 1].Value = "12345";
+            dataGridViewTag[1, 1].Value = "등록필요";
+            dataGridViewTag[0, 2].Value = "1236";
+            dataGridViewTag[1, 2].Value = "등록필요";
             //dataGridViewTag[0, 3].Value = "12345";
             //dataGridViewTag[1, 3].Value = "등록필요";
             //dataGridViewTag[0, 4].Value = "1236";
             //dataGridViewTag[1, 4].Value = "등록필요";
 
-            //addUidList.Add("123");
-            //addUidList.Add("12345");
-            //addUidList.Add("1236");
+            addUidList.Add("123");
+            addUidList.Add("12345");
+            addUidList.Add("1236");
 
             int iret = RFIDLIB.rfidlib_reader.RDR_Open(connstr, ref hReader);
-            if(iret!=0)
+            if (iret != 0)
             {
                 return;
             }
-          
+
             InvenParamSpecList = RFIDLIB.rfidlib_reader.RDR_CreateInvenParamSpecList();
             RFIDLIB.rfidlib_aip_iso15693.ISO15693_CreateInvenParam(InvenParamSpecList, 0, 0, 0, 0);
-            comboBoxCommunication.Enabled = false;
             buttonOpen.Enabled = false;
             buttonClose.Enabled = true;
             comboBoxCOM.Enabled = false;
@@ -140,7 +125,6 @@ namespace TagInventory
             }
             RFIDLIB.rfidlib_reader.RDR_Close(hReader);
             hReader = UIntPtr.Zero;
-            comboBoxCommunication.Enabled = true;
             buttonOpen.Enabled = true;
             buttonClose.Enabled = false;
             comboBoxCOM.Enabled = true;
@@ -174,14 +158,14 @@ namespace TagInventory
                 Byte dsfid = 0;
                 Byte[] uid = new Byte[8];
                 iret = RFIDLIB.rfidlib_aip_iso15693.ISO15693_ParseTagDataReport(TagDataReport, ref aip_id, ref tag_id, ref ant_id, ref dsfid, uid);
-                if(iret==0)
+                if (iret == 0)
                 {
                     string strUid = BitConverter.ToString(uid, 0, (int)8).Replace("-", string.Empty);
                     if (!uids.Contains(strUid))
                     {
                         uids.Add(strUid);
                     }
-                    
+
                 }
                 TagDataReport = RFIDLIB.rfidlib_reader.RDR_GetTagDataReport(hReader, RFIDLIB.rfidlib_def.RFID_SEEK_NEXT); //first
             }
@@ -196,7 +180,7 @@ namespace TagInventory
             inventoryThrd = new Thread(InventoryProc);
             inventoryThrd.Start();
         }
-       
+
         void InventoryProc()
         {
             bInventoryFlg = true;
@@ -204,7 +188,7 @@ namespace TagInventory
             while (bInventoryFlg)
             {
                 //uid init
-                List<string>uids = new List<string>();
+                List<string> uids = new List<string>();
                 int iret = Inventory(uids);
                 if (iret != 0)
                 {
@@ -222,13 +206,13 @@ namespace TagInventory
                        }
 
                        int total_price = 0;
-                       foreach(string prod in prodUIDDict.Values)
+                       foreach (string prod in prodUIDDict.Values)
                        {
                            total_price += prodPriceDict[prod];
                        }
 
                        int present_price = 0;
-                       for(int c=0; c < dataGridViewTag.Rows.Count; c++)
+                       for (int c = 0; c < dataGridViewTag.Rows.Count; c++)
                        {
                            present_price += Int32.Parse(dataGridViewTag[2, c].Value.ToString());
                        }
@@ -260,12 +244,12 @@ namespace TagInventory
                                addUidList.Add(uids[j]);
                            }
                        }
-                       
+
                    }
 
                    labelTagNumber.Text = uids.Count + "";
                    total_prod_tb.Text = "콜라 : " + coke.ToString() + ", 사이다 : " + soda.ToString() + ", 우유 : " + milk + ", 커피 : " + coffee.ToString() + ", 샐러드 : " + salad.ToString();
-                   
+
                }));
             }
 
@@ -339,14 +323,14 @@ namespace TagInventory
                             }
                         }
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
-                        MessageBox.Show("상품 등록중 오류 등록할 상품이 없습니다." );
+                        MessageBox.Show("상품 등록중 오류 등록할 상품이 없습니다.");
                     }
                 }));
-                
+
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 MessageBox.Show(e.Message.ToString());
             }
@@ -366,50 +350,11 @@ namespace TagInventory
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void coke_button_Click(object sender, EventArgs e)
+        private void apply_button_Click(object sender, EventArgs e)
         {
             prod_button_function("콜라");
         }
-        /// <summary>
-        /// 사이다로 uid 매핑
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void soda_button_Click(object sender, EventArgs e)
-        {
-            prod_button_function("사이다");
-        }
-
-        /// <summary>
-        /// 커피로 uid 매핑
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void coffee_button_Click(object sender, EventArgs e)
-        {
-            prod_button_function("커피");
-        }
-
-        /// <summary>
-        /// 우유로 uid 매핑
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void milk_button_Click(object sender, EventArgs e)
-        {
-            prod_button_function("우유");
-        }
-
-        /// <summary>
-        /// 샐러드로 uid매핑
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void salad_button_Click(object sender, EventArgs e)
-        {
-            prod_button_function("샐러드");
-        }
-
+        
         /// <summary>
         /// 쓰레드 호출을 위한 내부 클래스 구현, 데이터공유
         /// </summary>
@@ -421,24 +366,48 @@ namespace TagInventory
             public Mapping(string prod)
             {
                 this.prod = prod;
-                
+
             }
 
             public void ThreadProd()
             {
-                foreach(string uid in addUidList)
+                foreach (string uid in addUidList)
                 {
                     try
                     {
                         prodUIDDict.Add(uid, prod);
                     }
-                    catch {
-                        MessageBox.Show("동일한 uid를 상품으로 추가할 수 없습니다.. UID : " + uid );
-                        
+                    catch
+                    {
+                        MessageBox.Show("동일한 uid를 상품으로 추가할 수 없습니다.. UID : " + uid);
+
                     }
                 }
                 prodThrd = null;
             }
+        }
+
+        private void delete_button_Click(object sender, EventArgs e)
+        {
+            //MessageBox.Show();
+            this.Invoke((EventHandler)(delegate
+            {
+                int delete_count = dataGridViewTag.SelectedRows.Count;
+                var enumer = dataGridViewTag.SelectedRows.GetEnumerator();
+                enumer.MoveNext();
+                for (int j = 0; j < delete_count; j++)
+                {
+                    DataGridViewRow selected = (DataGridViewRow)enumer.Current;
+                    //MessageBox.Show(selected.Cells[0].Value.ToString());
+                    string uid = selected.Cells[0].Value.ToString();
+                    prodUIDDict.Remove(uid);
+                    MessageBox.Show(uid + "를 삭제합니다.");
+                    
+                    enumer.MoveNext();
+                }
+                MessageBox.Show($"총 {delete_count}건 삭제완료 ");
+
+            }));
         }
     }
 

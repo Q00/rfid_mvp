@@ -28,8 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.comboBoxCommunication = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.comboBoxFrame = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -40,6 +38,7 @@
             this.buttonOpen = new System.Windows.Forms.Button();
             this.buttonClose = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.delete_button = new System.Windows.Forms.Button();
             this.labelTagNumber = new System.Windows.Forms.Label();
             this.buttonStop = new System.Windows.Forms.Button();
             this.buttonStart = new System.Windows.Forms.Button();
@@ -52,35 +51,26 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.total_prod_tb = new System.Windows.Forms.TextBox();
-            this.coke_button = new System.Windows.Forms.Button();
-            this.soda_button = new System.Windows.Forms.Button();
-            this.coffee_button = new System.Windows.Forms.Button();
-            this.milk_button = new System.Windows.Forms.Button();
-            this.salad_button = new System.Windows.Forms.Button();
+            this.apply_button = new System.Windows.Forms.Button();
+            this.nametxt = new System.Windows.Forms.TextBox();
+            this.pricetxt = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTag)).BeginInit();
+            this.groupBox2.SuspendLayout();
+            this.groupBox4.SuspendLayout();
+            this.groupBox5.SuspendLayout();
+            this.groupBox6.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(28, 30);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(112, 15);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Communication:";
-            // 
-            // comboBoxCommunication
-            // 
-            this.comboBoxCommunication.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxCommunication.FormattingEnabled = true;
-            this.comboBoxCommunication.Location = new System.Drawing.Point(155, 26);
-            this.comboBoxCommunication.Margin = new System.Windows.Forms.Padding(4);
-            this.comboBoxCommunication.Name = "comboBoxCommunication";
-            this.comboBoxCommunication.Size = new System.Drawing.Size(160, 23);
-            this.comboBoxCommunication.TabIndex = 1;
             // 
             // groupBox1
             // 
@@ -90,14 +80,17 @@
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.comboBoxCOM);
             this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Location = new System.Drawing.Point(31, 72);
+            this.groupBox1.Controls.Add(this.buttonOpen);
+            this.groupBox1.Controls.Add(this.buttonClose);
+            this.groupBox1.Location = new System.Drawing.Point(33, 24);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox1.Size = new System.Drawing.Size(285, 161);
+            this.groupBox1.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.groupBox1.Size = new System.Drawing.Size(285, 212);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Serial Port";
+            this.groupBox1.Text = "세팅";
             // 
             // comboBoxFrame
             // 
@@ -161,7 +154,7 @@
             // 
             // buttonOpen
             // 
-            this.buttonOpen.Location = new System.Drawing.Point(376, 24);
+            this.buttonOpen.Location = new System.Drawing.Point(17, 169);
             this.buttonOpen.Margin = new System.Windows.Forms.Padding(4);
             this.buttonOpen.Name = "buttonOpen";
             this.buttonOpen.Size = new System.Drawing.Size(100, 29);
@@ -172,7 +165,7 @@
             // 
             // buttonClose
             // 
-            this.buttonClose.Location = new System.Drawing.Point(525, 24);
+            this.buttonClose.Location = new System.Drawing.Point(147, 169);
             this.buttonClose.Margin = new System.Windows.Forms.Padding(4);
             this.buttonClose.Name = "buttonClose";
             this.buttonClose.Size = new System.Drawing.Size(100, 29);
@@ -183,6 +176,7 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.delete_button);
             this.groupBox3.Controls.Add(this.labelTagNumber);
             this.groupBox3.Controls.Add(this.buttonStop);
             this.groupBox3.Controls.Add(this.buttonStart);
@@ -195,11 +189,25 @@
             this.groupBox3.TabIndex = 6;
             this.groupBox3.TabStop = false;
             // 
+            // delete_button
+            // 
+            this.delete_button.AutoSize = true;
+            this.delete_button.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.delete_button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.delete_button.Location = new System.Drawing.Point(492, 171);
+            this.delete_button.Margin = new System.Windows.Forms.Padding(4);
+            this.delete_button.Name = "delete_button";
+            this.delete_button.Size = new System.Drawing.Size(132, 42);
+            this.delete_button.TabIndex = 12;
+            this.delete_button.Text = "delete";
+            this.delete_button.UseVisualStyleBackColor = false;
+            this.delete_button.Click += new System.EventHandler(this.delete_button_Click);
+            // 
             // labelTagNumber
             // 
             this.labelTagNumber.Font = new System.Drawing.Font("SimSun", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.labelTagNumber.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-            this.labelTagNumber.Location = new System.Drawing.Point(489, 184);
+            this.labelTagNumber.Location = new System.Drawing.Point(484, 217);
             this.labelTagNumber.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelTagNumber.Name = "labelTagNumber";
             this.labelTagNumber.Size = new System.Drawing.Size(167, 58);
@@ -209,24 +217,26 @@
             // 
             // buttonStop
             // 
+            this.buttonStop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.buttonStop.Location = new System.Drawing.Point(492, 106);
             this.buttonStop.Margin = new System.Windows.Forms.Padding(4);
             this.buttonStop.Name = "buttonStop";
             this.buttonStop.Size = new System.Drawing.Size(132, 42);
             this.buttonStop.TabIndex = 2;
             this.buttonStop.Text = "Stop";
-            this.buttonStop.UseVisualStyleBackColor = true;
+            this.buttonStop.UseVisualStyleBackColor = false;
             this.buttonStop.Click += new System.EventHandler(this.buttonStop_Click);
             // 
             // buttonStart
             // 
+            this.buttonStart.BackColor = System.Drawing.SystemColors.Control;
             this.buttonStart.Location = new System.Drawing.Point(492, 39);
             this.buttonStart.Margin = new System.Windows.Forms.Padding(4);
             this.buttonStart.Name = "buttonStart";
             this.buttonStart.Size = new System.Drawing.Size(132, 42);
             this.buttonStart.TabIndex = 1;
             this.buttonStart.Text = "Start";
-            this.buttonStart.UseVisualStyleBackColor = true;
+            this.buttonStart.UseVisualStyleBackColor = false;
             this.buttonStart.Click += new System.EventHandler(this.buttonStart_Click);
             // 
             // dataGridViewTag
@@ -234,6 +244,7 @@
             this.dataGridViewTag.AllowUserToAddRows = false;
             this.dataGridViewTag.AllowUserToDeleteRows = false;
             this.dataGridViewTag.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridViewTag.BackgroundColor = System.Drawing.Color.Azure;
             this.dataGridViewTag.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewTag.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.UID,
@@ -304,94 +315,168 @@
             this.total_prod_tb.Size = new System.Drawing.Size(374, 25);
             this.total_prod_tb.TabIndex = 10;
             // 
-            // coke_button
+            // apply_button
             // 
-            this.coke_button.Location = new System.Drawing.Point(332, 104);
-            this.coke_button.Name = "coke_button";
-            this.coke_button.Size = new System.Drawing.Size(75, 23);
-            this.coke_button.TabIndex = 0;
-            this.coke_button.Text = "콜라";
-            this.coke_button.UseVisualStyleBackColor = true;
-            this.coke_button.Click += new System.EventHandler(this.coke_button_Click);
+            this.apply_button.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.apply_button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.apply_button.FlatAppearance.BorderSize = 0;
+            this.apply_button.Location = new System.Drawing.Point(225, 31);
+            this.apply_button.Name = "apply_button";
+            this.apply_button.Size = new System.Drawing.Size(102, 44);
+            this.apply_button.TabIndex = 0;
+            this.apply_button.Text = "등록";
+            this.apply_button.UseVisualStyleBackColor = false;
+            this.apply_button.Click += new System.EventHandler(this.apply_button_Click);
             // 
-            // soda_button
+            // nametxt
             // 
-            this.soda_button.Location = new System.Drawing.Point(470, 104);
-            this.soda_button.Name = "soda_button";
-            this.soda_button.Size = new System.Drawing.Size(75, 23);
-            this.soda_button.TabIndex = 0;
-            this.soda_button.Text = "사이다";
-            this.soda_button.UseVisualStyleBackColor = true;
-            this.soda_button.Click += new System.EventHandler(this.soda_button_Click);
+            this.nametxt.Location = new System.Drawing.Point(411, 57);
+            this.nametxt.Name = "nametxt";
+            this.nametxt.Size = new System.Drawing.Size(100, 25);
+            this.nametxt.TabIndex = 11;
             // 
-            // coffee_button
+            // pricetxt
             // 
-            this.coffee_button.Location = new System.Drawing.Point(605, 104);
-            this.coffee_button.Name = "coffee_button";
-            this.coffee_button.Size = new System.Drawing.Size(75, 23);
-            this.coffee_button.TabIndex = 0;
-            this.coffee_button.Text = "커피";
-            this.coffee_button.UseVisualStyleBackColor = true;
-            this.coffee_button.Click += new System.EventHandler(this.coffee_button_Click);
+            this.pricetxt.Location = new System.Drawing.Point(410, 94);
+            this.pricetxt.Name = "pricetxt";
+            this.pricetxt.Size = new System.Drawing.Size(100, 25);
+            this.pricetxt.TabIndex = 12;
             // 
-            // milk_button
+            // label1
             // 
-            this.milk_button.Location = new System.Drawing.Point(401, 175);
-            this.milk_button.Name = "milk_button";
-            this.milk_button.Size = new System.Drawing.Size(75, 23);
-            this.milk_button.TabIndex = 0;
-            this.milk_button.Text = "우유";
-            this.milk_button.UseVisualStyleBackColor = true;
-            this.milk_button.Click += new System.EventHandler(this.milk_button_Click);
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(337, 59);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(72, 15);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "상품이름:";
             // 
-            // salad_button
+            // label5
             // 
-            this.salad_button.Location = new System.Drawing.Point(530, 175);
-            this.salad_button.Name = "salad_button";
-            this.salad_button.Size = new System.Drawing.Size(75, 23);
-            this.salad_button.TabIndex = 0;
-            this.salad_button.Text = "샐러드";
-            this.salad_button.UseVisualStyleBackColor = true;
-            this.salad_button.Click += new System.EventHandler(this.salad_button_Click);
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(341, 98);
+            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(67, 15);
+            this.label5.TabIndex = 5;
+            this.label5.Text = "가격     :";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.groupBox4);
+            this.groupBox2.Controls.Add(this.apply_button);
+            this.groupBox2.Location = new System.Drawing.Point(325, 27);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(372, 112);
+            this.groupBox2.TabIndex = 13;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "신규등록";
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.button1);
+            this.groupBox4.Location = new System.Drawing.Point(0, 133);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(376, 62);
+            this.groupBox4.TabIndex = 14;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "신규등록";
+            // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.button1.FlatAppearance.BorderSize = 0;
+            this.button1.Location = new System.Drawing.Point(225, 31);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(102, 44);
+            this.button1.TabIndex = 0;
+            this.button1.Text = "등록";
+            this.button1.UseVisualStyleBackColor = false;
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.groupBox6);
+            this.groupBox5.Controls.Add(this.button3);
+            this.groupBox5.Location = new System.Drawing.Point(323, 146);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(372, 85);
+            this.groupBox5.TabIndex = 15;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "기존물품등록";
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.button2);
+            this.groupBox6.Location = new System.Drawing.Point(0, 133);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(376, 62);
+            this.groupBox6.TabIndex = 14;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "신규등록";
+            // 
+            // button2
+            // 
+            this.button2.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.button2.FlatAppearance.BorderSize = 0;
+            this.button2.Location = new System.Drawing.Point(225, 31);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(102, 44);
+            this.button2.TabIndex = 0;
+            this.button2.Text = "등록";
+            this.button2.UseVisualStyleBackColor = false;
+            // 
+            // button3
+            // 
+            this.button3.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.button3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.button3.FlatAppearance.BorderSize = 0;
+            this.button3.Location = new System.Drawing.Point(225, 31);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(102, 44);
+            this.button3.TabIndex = 0;
+            this.button3.Text = "등록";
+            this.button3.UseVisualStyleBackColor = false;
             // 
             // MainFrm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(713, 578);
-            this.Controls.Add(this.salad_button);
-            this.Controls.Add(this.milk_button);
-            this.Controls.Add(this.coffee_button);
-            this.Controls.Add(this.soda_button);
-            this.Controls.Add(this.coke_button);
+            this.Controls.Add(this.groupBox5);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.pricetxt);
+            this.Controls.Add(this.nametxt);
             this.Controls.Add(this.total_prod_tb);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.total_price_tb);
             this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.buttonClose);
-            this.Controls.Add(this.buttonOpen);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.comboBoxCommunication);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.groupBox2);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "MainFrm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Tag Inventory";
+            this.Text = "관리자창";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTag)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox6.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox comboBoxCommunication;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ComboBox comboBoxCOM;
         private System.Windows.Forms.Label label2;
@@ -414,11 +499,19 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox total_prod_tb;
-        private System.Windows.Forms.Button coke_button;
-        private System.Windows.Forms.Button soda_button;
-        private System.Windows.Forms.Button coffee_button;
-        private System.Windows.Forms.Button milk_button;
-        private System.Windows.Forms.Button salad_button;
+        private System.Windows.Forms.Button apply_button;
+        private System.Windows.Forms.Button delete_button;
+        private System.Windows.Forms.TextBox nametxt;
+        private System.Windows.Forms.TextBox pricetxt;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button3;
     }
 }
 
