@@ -6,9 +6,12 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Threading;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace TagInventory
 {
+    
     public partial class MainFrm : Form
     {
         private UIntPtr hReader = UIntPtr.Zero;
@@ -18,8 +21,6 @@ namespace TagInventory
         private int milk = 0;
         private int coffee = 0;
         private int salad = 0;
-
- 
 
         private bool bInventoryFlg = false;
         private Thread inventoryThrd = null;
@@ -54,7 +55,19 @@ namespace TagInventory
             comboBoxFrame.Items.Add("8O1");
             comboBoxFrame.Items.Add("8N1");
             comboBoxFrame.SelectedIndex = 0;
-            
+
+            //prodlist에 데이터 추가
+            DirectoryInfo di = new DirectoryInfo("./");
+            FileInfo[] prod_files = di.GetFiles("*.dat");
+            if(prod_files.Length != 0)
+            {
+                for(int index=0; index < prod_files.Length; index++)
+                {
+                    //prodlist.Items.Add(prod_files[index].ToString());
+                    load_data(prod_files[index].ToString());
+
+                }
+            }
             buttonOpen.Enabled = true;
             buttonClose.Enabled = false;
             comboBoxCOM.Enabled = true;
@@ -268,8 +281,9 @@ namespace TagInventory
                 buttonStop.Enabled = false;
                 buttonStart.Enabled = true;
                 bInventoryFlg = false;
+                inventoryThrd = null;
             }));
-            inventoryThrd = null;
+            
         }
 
         private void buttonStop_Click(object sender, EventArgs e)
@@ -333,25 +347,65 @@ namespace TagInventory
             }
             finally
             {
-                this.Invoke((EventHandler)(delegate
-                {
-                    addUidList.Clear();
-                    buttonStart.Enabled = true;
-                }));
-
+                //thread를 무조건 기다려야하기때문에 finally에 동기로 처리
+                addUidList.Clear();
+                buttonStart.Enabled = true;
+                //정지 버튼
+                buttonStop.Enabled = false;
+                bInventoryFlg = false;
             }
         }
 
         /// <summary>
-        /// 콜라로 uid 매핑
+        /// 새로운 정보로 uid 매핑
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void apply_button_Click(object sender, EventArgs e)
+        private void apply_new_button_Click(object sender, EventArgs e)
         {
-            prod_button_function(nametxt.Text, pricetxt.Text);
+            try
+            {
+                if (nametxt.Text == "" || pricetxt.Text == "")
+                {
+                    throw new Exception("상품 가격 또는 상품 이름을 입력해주십시오.");
+                }
+                this.Invoke((EventHandler)(delegate
+                {
+                    save_data();
+                }));
+                prod_button_function(nametxt.Text, pricetxt.Text);
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show(err.Message.ToString());
+            }
         }
-        
+
+
+        private void delete_button_Click(object sender, EventArgs e)
+        {
+            //MessageBox.Show();
+            this.Invoke((EventHandler)(delegate
+            {
+                int delete_count = dataGridViewTag.SelectedRows.Count;
+                var enumer = dataGridViewTag.SelectedRows.GetEnumerator();
+                enumer.MoveNext();
+                for (int j = 0; j < delete_count; j++)
+                {
+                    DataGridViewRow selected = (DataGridViewRow)enumer.Current;
+                    //MessageBox.Show(selected.Cells[0].Value.ToString());
+                    string uid = selected.Cells[0].Value.ToString();
+                    prodUIDDict.Remove(uid);
+                    MessageBox.Show(uid + "를 삭제합니다.");
+
+                    enumer.MoveNext();
+                }
+                MessageBox.Show($"총 {delete_count}건 삭제완료 ");
+                datagrid_close();
+                datagrid_start();
+            }));
+        }
+
         /// <summary>
         /// 쓰레드 호출을 위한 내부 클래스 구현, 데이터공유
         /// </summary>
@@ -387,29 +441,72 @@ namespace TagInventory
             }
         }
 
-        private void delete_button_Click(object sender, EventArgs e)
+        /// <summary>
+        /// 시리얼라이즈 클래스
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [Serializable]
+        class Product
         {
-            //MessageBox.Show();
-            this.Invoke((EventHandler)(delegate
+            public string name { get; set; }
+            public string price { get; set; }
+
+            public override string ToString()
             {
-                int delete_count = dataGridViewTag.SelectedRows.Count;
-                var enumer = dataGridViewTag.SelectedRows.GetEnumerator();
-                enumer.MoveNext();
-                for (int j = 0; j < delete_count; j++)
-                {
-                    DataGridViewRow selected = (DataGridViewRow)enumer.Current;
-                    //MessageBox.Show(selected.Cells[0].Value.ToString());
-                    string uid = selected.Cells[0].Value.ToString();
-                    prodUIDDict.Remove(uid);
-                    MessageBox.Show(uid + "를 삭제합니다.");
-                    
-                    enumer.MoveNext();
-                }
-                MessageBox.Show($"총 {delete_count}건 삭제완료 ");
-                datagrid_close();
-                datagrid_start();
-            }));
+                return
+                    $"{name} : {price} 원";
+            }
         }
+
+        private void apply_button_Click(object sender, EventArgs e)
+        {
+            prod_button_function(nametxt.Text, pricetxt.Text);
+
+        }
+
+        private void save_data()
+        {
+            try
+            {
+                //스트림 생성
+                //.dat 활성화되지 않은 파일
+                using (Stream product_data = new FileStream(nametxt.Text + ".dat", FileMode.Create))
+                {
+                    Product prod = new Product()
+                    {
+                        name = nametxt.Text,
+                        price = pricetxt.Text
+                    };
+
+                    BinaryFormatter binaryFormatter = new BinaryFormatter();
+                    binaryFormatter.Serialize(product_data, prod);
+                    product_data.Close();
+                }
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show(e.Message.ToString());
+            }
+            finally
+            {
+                prodlist.Items.Add($"{nametxt.Text} : {pricetxt.Text}원");
+            }
+
+        }
+
+        private void load_data(string file_name)
+        {
+            using (Stream prod_data = new FileStream(file_name, FileMode.Open))
+            {
+                BinaryFormatter binaryFormatter = new BinaryFormatter();
+                //file load
+                Product prod = binaryFormatter.Deserialize(prod_data) as Product;
+                string str_prod = prod.ToString();
+                prodlist.Items.Add(str_prod);
+            }
+        }
+
     }
 
 
