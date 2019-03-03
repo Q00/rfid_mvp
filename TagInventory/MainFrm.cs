@@ -113,6 +113,11 @@ namespace TagInventory
 
         private void buttonClose_Click(object sender, EventArgs e)
         {
+            datagrid_close();
+        }
+
+        private void datagrid_close()
+        {
             if (inventoryThrd != null && inventoryThrd.IsAlive)
             {
                 MessageBox.Show("Please stop the inventory thread first.");
@@ -172,6 +177,11 @@ namespace TagInventory
             return 0;
         }
         private void buttonStart_Click(object sender, EventArgs e)
+        {
+            datagrid_start();
+        }
+
+        private void datagrid_start()
         {
             buttonStart.Enabled = false;
             buttonStop.Enabled = true;
@@ -307,21 +317,8 @@ namespace TagInventory
                 {
                     try
                     {
-                        dataGridViewTag.Rows.Clear();
-                        dataGridViewTag.Rows.Add(addUidList.Count);
-
-                        for (int j = 0; j < addUidList.Count; j++)
-                        {
-                            if (prodUIDDict.ContainsKey(addUidList[j]))
-                            {
-                                //already exist
-                                dataGridViewTag[0, j].Value = addUidList[j];
-                                dataGridViewTag[1, j].Value = prodUIDDict[addUidList[j]];
-                                count_up(prodUIDDict[addUidList[j]]);
-                                dataGridViewTag[2, j].Value = prodPriceDict[prodUIDDict[addUidList[j]]];
-                                dataGridViewTag[3, j].Value = 1;
-                            }
-                        }
+                        datagrid_close();
+                        datagrid_start();
                     }
                     catch (Exception e)
                     {
@@ -406,7 +403,8 @@ namespace TagInventory
                     enumer.MoveNext();
                 }
                 MessageBox.Show($"총 {delete_count}건 삭제완료 ");
-
+                datagrid_close();
+                datagrid_start();
             }));
         }
     }
