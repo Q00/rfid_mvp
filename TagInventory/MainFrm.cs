@@ -103,9 +103,9 @@ namespace TagInventory
             //dataGridViewTag[0, 4].Value = "1236";
             //dataGridViewTag[1, 4].Value = "등록필요";
 
-            addUidList.Add("123");
-            addUidList.Add("12345");
-            addUidList.Add("1236");
+            //addUidList.Add("123");
+            //addUidList.Add("12345");
+            //addUidList.Add("1236");
 
             int iret = RFIDLIB.rfidlib_reader.RDR_Open(connstr, ref hReader);
             if (iret != 0)
@@ -262,10 +262,10 @@ namespace TagInventory
                            //not exist , have to add.
                            dataGridViewTag[0, j].Value = uids[j];
                            dataGridViewTag[1, j].Value = "등록필요";
-                           if (!addUidList.Contains(uids[j]))
-                           {
-                               addUidList.Add(uids[j]);
-                           }
+                           //if (!addUidList.Contains(uids[j]))
+                           //{
+                           //    addUidList.Add(uids[j]);
+                           //}
                        }
 
                    }
@@ -323,6 +323,20 @@ namespace TagInventory
             {
                 buttonStop.Enabled = false;
                 bInventoryFlg = false;
+                this.Invoke((EventHandler)(delegate
+                {
+                    int delete_count = dataGridViewTag.SelectedRows.Count;
+                    var enumer = dataGridViewTag.SelectedRows.GetEnumerator();
+                    enumer.MoveNext();
+                    for (int j = 0; j < delete_count; j++)
+                    {
+                        DataGridViewRow selected = (DataGridViewRow)enumer.Current;
+                        //MessageBox.Show(selected.Cells[0].Value.ToString());
+                        string uid = selected.Cells[0].Value.ToString();
+                        addUidList.Add(uid);
+                        enumer.MoveNext();
+                    }
+                }));
                 Mapping map = new Mapping(prod, Convert.ToInt32(price));
                 prodThrd = new Thread(map.ThreadProd);
                 prodThrd.Start();
@@ -381,7 +395,11 @@ namespace TagInventory
             }
         }
 
-
+        /// <summary>
+        /// 상품 삭제
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void delete_button_Click(object sender, EventArgs e)
         {
             //MessageBox.Show();
@@ -428,8 +446,13 @@ namespace TagInventory
                 {
                     try
                     {
+
                         prodUIDDict.Add(uid, prod);
-                        prodPriceDict.Add(prod, price);
+                        if (!prodPriceDict.ContainsKey(prod))
+                        {
+                            //한번만 추가해도됨
+                            prodPriceDict.Add(prod, price);
+                        }
                     }
                     catch
                     {
@@ -455,13 +478,23 @@ namespace TagInventory
             public override string ToString()
             {
                 return
-                    $"{name} : {price} 원";
+                    $"{name} : {price}";
             }
         }
 
         private void apply_button_Click(object sender, EventArgs e)
         {
-            prod_button_function(nametxt.Text, pricetxt.Text);
+            //MessageBox.Show(prodlist.SelectedItem.ToString());
+            string prod_string = prodlist.SelectedItem.ToString();
+            if(prod_string == "")
+            {
+                MessageBox.Show("기존 등록된 물품을 선택해주십시오");
+                return;
+            }
+            string[] prod_arr = prodlist.SelectedItem.ToString().Split(':');
+            string prod_name = prod_arr[0].Trim();
+            string prod_price = prod_arr[1].Trim();
+            prod_button_function(prod_name, prod_price);
 
         }
 
