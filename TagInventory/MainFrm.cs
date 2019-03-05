@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Threading;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Linq;
 
 namespace TagInventory
 {
@@ -28,6 +29,9 @@ namespace TagInventory
         static private Dictionary<string, int> prodPriceDict = new Dictionary<string, int>();
         static private Dictionary<string, string> prodUIDDict = new Dictionary<string, string>();
         static private List<string> addUidList = new List<string>();
+        //소비자단 flag
+        static public bool drowSubFlag = false;
+
         public MainFrm()
         {
 
@@ -90,14 +94,14 @@ namespace TagInventory
 
 
 
-            dataGridViewTag.Rows.Clear();
-            dataGridViewTag.Rows.Add(3);
-            dataGridViewTag[0, 0].Value = "123";
-            dataGridViewTag[1, 0].Value = "등록필요";
-            dataGridViewTag[0, 1].Value = "12345";
-            dataGridViewTag[1, 1].Value = "등록필요";
-            dataGridViewTag[0, 2].Value = "1236";
-            dataGridViewTag[1, 2].Value = "등록필요";
+            //dataGridViewTag.Rows.Clear();
+            //dataGridViewTag.Rows.Add(1);
+            //dataGridViewTag[0, 0].Value = "123";
+            //dataGridViewTag[1, 0].Value = "등록필요";
+            //dataGridViewTag[0, 1].Value = "12345";
+            //dataGridViewTag[1, 1].Value = "등록필요";
+            //dataGridViewTag[0, 2].Value = "1236";
+            //dataGridViewTag[1, 2].Value = "등록필요";
             //dataGridViewTag[0, 3].Value = "12345";
             //dataGridViewTag[1, 3].Value = "등록필요";
             //dataGridViewTag[0, 4].Value = "1236";
@@ -112,7 +116,7 @@ namespace TagInventory
             {
                 return;
             }
-
+            //var a = Enumerable.Except(prodUIDDict.Keys.ToArray(), dataGridViewTag.Rows.OfType<DataGridViewRow>().Select(r => r.Cells[0].Value.ToString()).ToArray());
             InvenParamSpecList = RFIDLIB.rfidlib_reader.RDR_CreateInvenParamSpecList();
             RFIDLIB.rfidlib_aip_iso15693.ISO15693_CreateInvenParam(InvenParamSpecList, 0, 0, 0, 0);
             buttonOpen.Enabled = false;
@@ -219,6 +223,7 @@ namespace TagInventory
                 }
                 RFIDLIB.rfidlib_reader.RDR_CloseRFTransmitter(hReader);
                 //show the tags
+                var first_check_data = dataGridViewTag.Rows.OfType<DataGridViewRow>().Select(r => r.Cells[0].Value.ToString()).ToArray();
                 this.Invoke((EventHandler)(delegate
                {
                    if (dataGridViewTag.RowCount > uids.Count)
@@ -233,6 +238,9 @@ namespace TagInventory
                        {
                            total_price += prodPriceDict[prod];
                        }
+
+                       //prodUIDDict.Values.Distinct().ToList();
+
 
                        int present_price = 0;
                        for (int c = 0; c < dataGridViewTag.Rows.Count; c++)
@@ -255,7 +263,7 @@ namespace TagInventory
                            dataGridViewTag[1, j].Value = prodUIDDict[uids[j]];
                            dataGridViewTag[2, j].Value = prodPriceDict[prodUIDDict[uids[j]]];
                            dataGridViewTag[3, j].Value = 1;
-                           count_up(prodUIDDict[uids[j]]);
+
                        }
                        else
                        {
@@ -269,9 +277,34 @@ namespace TagInventory
                        }
 
                    }
-
+                    
                    labelTagNumber.Text = uids.Count + "";
-                   total_prod_tb.Text = "콜라 : " + coke.ToString() + ", 사이다 : " + soda.ToString() + ", 우유 : " + milk + ", 커피 : " + coffee.ToString() + ", 샐러드 : " + salad.ToString();
+                   var except = Enumerable.Except(prodUIDDict.Keys.ToArray(), dataGridViewTag.Rows.OfType<DataGridViewRow>().Select(r => r.Cells[0].Value.ToString()).ToArray());
+                   Dictionary<string, string> total_dict = new Dictionary<string, string>();
+                   foreach (string uuid in except)
+                   {
+                       total_dict.Add(prodUIDDict[uuid], prodPriceDict[prodUIDDict[uuid]].ToString());
+                   }
+                   var second_check_data = dataGridViewTag.Rows.OfType<DataGridViewRow>().Select(r => r.Cells[0].Value.ToString()).ToArray();
+                   if (drowSubFlag)
+                   {
+                       if(Enumerable.Except(first_check_data, second_check_data).Count() != 0)
+                       {
+                           SubFrm.dataGridView1.Rows.Clear();
+                           SubFrm.dataGridView1.Rows.Add(Enumerable.Except(first_check_data, second_check_data).Count());
+                           int count = 0;
+                           foreach(string subuid in Enumerable.Except(first_check_data, second_check_data))
+                           {
+                               SubFrm.dataGridView1[0, count].Value = prodUIDDict[subuid].ToString();
+                               SubFrm.dataGridView1[1, count].Value = prodPriceDict[prodUIDDict[subuid].ToString()].ToString();
+                               count++;
+                           }
+
+
+                       }
+                   }
+                   string total_str = ToPrettyString(total_dict);
+                   total_prod_tb.Text = total_str;
 
                }));
             }
@@ -286,33 +319,14 @@ namespace TagInventory
             
         }
 
+
+
         private void buttonStop_Click(object sender, EventArgs e)
         {
             buttonStop.Enabled = false;
             bInventoryFlg = false;
         }
 
-        private void count_up(string prod_name)
-        {
-            switch (prod_name)
-            {
-                case "콜라":
-                    coke += 1;
-                    break;
-                case "사이다":
-                    soda += 1;
-                    break;
-                case "커피":
-                    coffee += 1;
-                    break;
-                case "우유":
-                    milk += 1;
-                    break;
-                case "샐러드":
-                    salad += 1;
-                    break;
-            }
-        }
         /// <summary>
         /// 쓰레드 불러주는 함수
         /// </summary>
@@ -470,7 +484,7 @@ namespace TagInventory
         /// <param name="sender"></param>
         /// <param name="e"></param>
         [Serializable]
-        class Product
+        public class Product
         {
             public string name { get; set; }
             public string price { get; set; }
@@ -524,6 +538,7 @@ namespace TagInventory
             finally
             {
                 prodlist.Items.Add($"{nametxt.Text} : {pricetxt.Text}원");
+                SubFrm.상품.Items.Add($"{nametxt.Text} : {pricetxt.Text}원");
             }
 
         }
@@ -538,6 +553,16 @@ namespace TagInventory
                 string str_prod = prod.ToString();
                 prodlist.Items.Add(str_prod);
             }
+        }
+
+        public string ToPrettyString(Dictionary<string,string> dict)
+        {
+            var str = new StringBuilder();
+            foreach (var pair in dict)
+            {
+                str.Append(String.Format("{0} {1} 개, ", pair.Key, pair.Value));
+            }
+            return str.ToString();
         }
 
     }
