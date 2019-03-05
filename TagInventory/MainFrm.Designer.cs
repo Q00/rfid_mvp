@@ -18,7 +18,7 @@
                 components.Dispose();
             }
             base.Dispose(disposing);
-        }
+        }  
 
         #region Windows 窗体设计器生成的代码
 
@@ -60,9 +60,10 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.button1 = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.prodlist = new System.Windows.Forms.ComboBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
+            this.apply_new_button = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTag)).BeginInit();
@@ -320,7 +321,7 @@
             this.apply_button.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.apply_button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.apply_button.FlatAppearance.BorderSize = 0;
-            this.apply_button.Location = new System.Drawing.Point(225, 31);
+            this.apply_button.Location = new System.Drawing.Point(232, 24);
             this.apply_button.Name = "apply_button";
             this.apply_button.Size = new System.Drawing.Size(102, 44);
             this.apply_button.TabIndex = 0;
@@ -365,7 +366,7 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.groupBox4);
-            this.groupBox2.Controls.Add(this.apply_button);
+            this.groupBox2.Controls.Add(this.apply_new_button);
             this.groupBox2.Location = new System.Drawing.Point(325, 27);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(372, 112);
@@ -397,14 +398,23 @@
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.prodlist);
+            this.groupBox5.Controls.Add(this.apply_button);
             this.groupBox5.Controls.Add(this.groupBox6);
-            this.groupBox5.Controls.Add(this.button3);
             this.groupBox5.Location = new System.Drawing.Point(323, 146);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(372, 85);
             this.groupBox5.TabIndex = 15;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "기존물품등록";
+            // 
+            // prodlist
+            // 
+            this.prodlist.FormattingEnabled = true;
+            this.prodlist.Location = new System.Drawing.Point(31, 36);
+            this.prodlist.Name = "prodlist";
+            this.prodlist.Size = new System.Drawing.Size(157, 23);
+            this.prodlist.TabIndex = 15;
             // 
             // groupBox6
             // 
@@ -428,17 +438,18 @@
             this.button2.Text = "등록";
             this.button2.UseVisualStyleBackColor = false;
             // 
-            // button3
+            // apply_new_button
             // 
-            this.button3.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.button3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.button3.FlatAppearance.BorderSize = 0;
-            this.button3.Location = new System.Drawing.Point(225, 31);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(102, 44);
-            this.button3.TabIndex = 0;
-            this.button3.Text = "등록";
-            this.button3.UseVisualStyleBackColor = false;
+            this.apply_new_button.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.apply_new_button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.apply_new_button.FlatAppearance.BorderSize = 0;
+            this.apply_new_button.Location = new System.Drawing.Point(230, 32);
+            this.apply_new_button.Name = "apply_new_button";
+            this.apply_new_button.Size = new System.Drawing.Size(102, 44);
+            this.apply_new_button.TabIndex = 0;
+            this.apply_new_button.Text = "등록";
+            this.apply_new_button.UseVisualStyleBackColor = false;
+            this.apply_new_button.Click += new System.EventHandler(this.apply_new_button_Click);
             // 
             // MainFrm
             // 
@@ -511,7 +522,8 @@
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button apply_new_button;
+        private System.Windows.Forms.ComboBox prodlist;
     }
 }
 
