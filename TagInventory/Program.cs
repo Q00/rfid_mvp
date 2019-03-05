@@ -14,7 +14,11 @@ namespace TagInventory
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainFrm());
+            MainFrm mainFrm = new MainFrm();
+            SubFrm subFrm = new SubFrm();
+            mainFrm.Show();
+            subFrm.Show();
+            Application.Run();
         }
     }
 }
