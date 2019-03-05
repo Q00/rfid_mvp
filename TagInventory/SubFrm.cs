@@ -1,0 +1,53 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
+using System.Windows.Forms;
+
+namespace TagInventory
+{
+    public partial class SubFrm : Form
+    {
+        public SubFrm()
+        {
+            InitializeComponent();
+
+            //prodlist에 데이터 추가
+            DirectoryInfo di = new DirectoryInfo("./");
+            FileInfo[] prod_files = di.GetFiles("*.dat");
+            if (prod_files.Length != 0)
+            {
+                for (int index = 0; index < prod_files.Length; index++)
+                {
+                    //prodlist.Items.Add(prod_files[index].ToString());
+                    load_data(prod_files[index].ToString());
+
+                }
+            }
+        }
+
+        private void load_data(string file_name)
+        {
+            using (Stream prod_data = new FileStream(file_name, FileMode.Open))
+            {
+                BinaryFormatter binaryFormatter = new BinaryFormatter();
+                //file load
+                MainFrm.Product prod = binaryFormatter.Deserialize(prod_data) as MainFrm.Product;
+                string str_prod = prod.ToString();
+                상품.Items.Add(str_prod);
+            }
+        }
+
+        private void buy_start_Click(object sender, EventArgs e)
+        {
+            this.Invoke((EventHandler)(delegate
+            {
+                MainFrm.drowSubFlag = true;
+            }));
+        }
+    }
+}
