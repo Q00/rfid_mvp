@@ -23,8 +23,13 @@ namespace TagInventory
             {
                 for (int index = 0; index < prod_files.Length; index++)
                 {
-                    //prodlist.Items.Add(prod_files[index].ToString());
-                    load_data(prod_files[index].ToString());
+                    string fname = prod_files[index].ToString();
+                    if (fname != "uids.dat" && fname != "prices.dat")
+                    {
+                        //prodlist.Items.Add(prod_files[index].ToString());
+                        load_data(prod_files[index].ToString());
+                    }
+                    
 
                 }
             }
@@ -62,7 +67,19 @@ namespace TagInventory
             {
                 MainFrm.drawSubFlag = false;
                 MainFrm.finishSubFlag = true;
+                
             }));
+
+            this.Invoke((EventHandler)(delegate
+            {
+                for(int count =0; count <dataGridView1.Rows.Count; count++)
+                {
+                    string uid = dataGridView1[0, count].Value.ToString();
+                    MainFrm.prodUIDDict.Remove(uid);
+                }
+            }));
+
+            MessageBox.Show(total_price + "원 구매완료");
 
             this.buy_start.Enabled = true;
             this.finish_button.Enabled = false;
