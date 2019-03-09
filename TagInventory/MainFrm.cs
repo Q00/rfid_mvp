@@ -30,7 +30,14 @@ namespace TagInventory
         static private Dictionary<string, string> prodUIDDict = new Dictionary<string, string>();
         static private List<string> addUidList = new List<string>();
         //소비자단 flag
-        static public bool drowSubFlag = false;
+        static public bool drawSubFlag = false;
+        //이후에 확장가능성 플래그 주석
+        ///결제가 붙으면 해당 플래그사용
+        static public bool finishSubFlag = false;
+        private bool dataRememberFlag = false;
+
+        //구매시작시 저장하는 데이터
+        string[] fisrt_check_data = new string[] { };
 
         public MainFrm()
         {
@@ -223,7 +230,16 @@ namespace TagInventory
                 }
                 RFIDLIB.rfidlib_reader.RDR_CloseRFTransmitter(hReader);
                 //show the tags
-                var first_check_data = dataGridViewTag.Rows.OfType<DataGridViewRow>().Select(r => r.Cells[0].Value.ToString()).ToArray();
+
+                if (drawSubFlag == true)
+                {
+                    if (dataRememberFlag == true)
+                    {
+                        
+                        fisrt_check_data = dataGridViewTag.Rows.OfType<DataGridViewRow>().Select(r => r.Cells[0].Value.ToString()).ToArray();
+                        dataRememberFlag = false;
+                    }
+                }
                 this.Invoke((EventHandler)(delegate
                {
                    if (dataGridViewTag.RowCount > uids.Count)
@@ -286,21 +302,22 @@ namespace TagInventory
                        total_dict.Add(prodUIDDict[uuid], prodPriceDict[prodUIDDict[uuid]].ToString());
                    }
                    var second_check_data = dataGridViewTag.Rows.OfType<DataGridViewRow>().Select(r => r.Cells[0].Value.ToString()).ToArray();
-                   if (drowSubFlag)
+                   if (drawSubFlag)
                    {
-                       if(Enumerable.Except(first_check_data, second_check_data).Count() != 0)
+                       if(Enumerable.Except(fisrt_check_data, second_check_data).Count() != 0)
                        {
                            SubFrm.dataGridView1.Rows.Clear();
-                           SubFrm.dataGridView1.Rows.Add(Enumerable.Except(first_check_data, second_check_data).Count());
+                           SubFrm.dataGridView1.Rows.Add(Enumerable.Except(fisrt_check_data, second_check_data).Count());
                            int count = 0;
-                           foreach(string subuid in Enumerable.Except(first_check_data, second_check_data))
+                           int total_price_sub = 0;
+                           foreach(string subuid in Enumerable.Except(fisrt_check_data, second_check_data))
                            {
                                SubFrm.dataGridView1[0, count].Value = prodUIDDict[subuid].ToString();
                                SubFrm.dataGridView1[1, count].Value = prodPriceDict[prodUIDDict[subuid].ToString()].ToString();
+                               total_price_sub += prodPriceDict[prodUIDDict[subuid].ToString()];
+                               SubFrm.total_price.Text = total_price_sub.ToString();
                                count++;
                            }
-
-
                        }
                    }
                    string total_str = ToPrettyString(total_dict);
