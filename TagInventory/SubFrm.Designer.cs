@@ -28,17 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             상품 = new System.Windows.Forms.ListBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.total_price = new System.Windows.Forms.Label();
+            total_price = new System.Windows.Forms.Label();
             dataGridView1 = new System.Windows.Forms.DataGridView();
             this.product_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.product_price = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.finish_button = new System.Windows.Forms.Button();
             this.buy_start = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(dataGridView1)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -68,15 +69,15 @@
             // 
             // total_price
             // 
-            this.total_price.Font = new System.Drawing.Font("SimSun", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.total_price.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-            this.total_price.Location = new System.Drawing.Point(136, 739);
-            this.total_price.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.total_price.Name = "total_price";
-            this.total_price.Size = new System.Drawing.Size(167, 58);
-            this.total_price.TabIndex = 4;
-            this.total_price.Text = "0";
-            this.total_price.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            total_price.Font = new System.Drawing.Font("SimSun", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            total_price.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+            total_price.Location = new System.Drawing.Point(136, 739);
+            total_price.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            total_price.Name = "total_price";
+            total_price.Size = new System.Drawing.Size(167, 58);
+            total_price.TabIndex = 4;
+            total_price.Text = "0";
+            total_price.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // dataGridView1
             // 
@@ -93,25 +94,26 @@
             // 
             // product_name
             // 
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("굴림", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.product_name.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("굴림", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.product_name.DefaultCellStyle = dataGridViewCellStyle5;
             this.product_name.HeaderText = "상품명";
             this.product_name.Name = "product_name";
             this.product_name.ReadOnly = true;
             // 
             // product_price
             // 
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("굴림", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.product_price.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("굴림", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.product_price.DefaultCellStyle = dataGridViewCellStyle6;
             this.product_price.HeaderText = "상품 가격";
             this.product_price.Name = "product_price";
             this.product_price.ReadOnly = true;
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.finish_button);
             this.groupBox2.Controls.Add(this.buy_start);
             this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Controls.Add(this.total_price);
+            this.groupBox2.Controls.Add(total_price);
             this.groupBox2.Font = new System.Drawing.Font("굴림", 16F);
             this.groupBox2.Location = new System.Drawing.Point(371, 21);
             this.groupBox2.Name = "groupBox2";
@@ -120,14 +122,15 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "구매목록";
             // 
-            // label1
+            // finish_button
             // 
-            this.label1.Font = new System.Drawing.Font("굴림", 20F);
-            this.label1.Location = new System.Drawing.Point(17, 709);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(155, 41);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "총 금액";
+            this.finish_button.Location = new System.Drawing.Point(164, 573);
+            this.finish_button.Name = "finish_button";
+            this.finish_button.Size = new System.Drawing.Size(148, 62);
+            this.finish_button.TabIndex = 7;
+            this.finish_button.Text = "구매종료";
+            this.finish_button.UseVisualStyleBackColor = true;
+            this.finish_button.Click += new System.EventHandler(this.finish_button_Click);
             // 
             // buy_start
             // 
@@ -138,6 +141,15 @@
             this.buy_start.Text = "구매시작";
             this.buy_start.UseVisualStyleBackColor = true;
             this.buy_start.Click += new System.EventHandler(this.buy_start_Click);
+            // 
+            // label1
+            // 
+            this.label1.Font = new System.Drawing.Font("굴림", 20F);
+            this.label1.Location = new System.Drawing.Point(17, 709);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(155, 41);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "총 금액";
             // 
             // SubFrm
             // 
@@ -158,12 +170,13 @@
 
         #endregion
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label total_price;
+        public static System.Windows.Forms.Label total_price;
         private System.Windows.Forms.DataGridViewTextBoxColumn product_name;
         private System.Windows.Forms.DataGridViewTextBoxColumn product_price;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button buy_start;
+        private System.Windows.Forms.Button finish_button;
         public static System.Windows.Forms.DataGridView dataGridView1;
         public static System.Windows.Forms.ListBox 상품;
     }

@@ -28,6 +28,9 @@ namespace TagInventory
 
                 }
             }
+
+            this.buy_start.Enabled = true;
+            this.finish_button.Enabled = false;
         }
 
         private void load_data(string file_name)
@@ -46,8 +49,23 @@ namespace TagInventory
         {
             this.Invoke((EventHandler)(delegate
             {
-                MainFrm.drowSubFlag = true;
+                MainFrm.drawSubFlag = true;
             }));
+
+            this.buy_start.Enabled = false;
+            this.finish_button.Enabled = true;
+        }
+
+        private void finish_button_Click(object sender, EventArgs e)
+        {
+            this.Invoke((EventHandler)(delegate
+            {
+                MainFrm.drawSubFlag = false;
+                MainFrm.finishSubFlag = true;
+            }));
+
+            this.buy_start.Enabled = true;
+            this.finish_button.Enabled = false;
         }
     }
 }
