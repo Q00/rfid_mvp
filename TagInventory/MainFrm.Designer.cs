@@ -1,4 +1,8 @@
-﻿namespace TagInventory
+﻿using System.IO;
+using System.Linq;
+using System.Xml.Serialization;
+
+namespace TagInventory
 {
     partial class MainFrm
     {
@@ -13,6 +17,19 @@
         /// <param name="disposing">如果应释放托管资源，为 true；否则为 false。</param>
         protected override void Dispose(bool disposing)
         {
+            
+            XmlSerializer serializer = new XmlSerializer(typeof(UidDictClass[]), new XmlRootAttribute() { ElementName = "Uids" });
+            using (Stream product_data = new FileStream("uids.dat", FileMode.Create))
+            {
+                serializer.Serialize(product_data, prodUIDDict.Select(kv => new UidDictClass() { uid = kv.Key, product_name = kv.Value }).ToArray());
+            }
+
+            serializer = new XmlSerializer(typeof(PriceDictClass[]), new XmlRootAttribute() { ElementName = "price" });
+            using (Stream product_data = new FileStream("prices.dat", FileMode.Create))
+            {
+                serializer.Serialize(product_data, prodPriceDict.Select(kv => new PriceDictClass() { product_name = kv.Key, price = kv.Value }).ToArray());
+            }
+
             if (disposing && (components != null))
             {
                 components.Dispose();
