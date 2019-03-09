@@ -9,6 +9,7 @@ using System.Threading;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Linq;
+using System.Xml.Serialization;
 
 namespace TagInventory
 {
@@ -17,17 +18,13 @@ namespace TagInventory
     {
         private UIntPtr hReader = UIntPtr.Zero;
         private UIntPtr InvenParamSpecList = UIntPtr.Zero;
-        private int coke = 0;
-        private int soda = 0;
-        private int milk = 0;
-        private int coffee = 0;
-        private int salad = 0;
+
 
         private bool bInventoryFlg = false;
         private Thread inventoryThrd = null;
         static private Thread prodThrd = null;
         static private Dictionary<string, int> prodPriceDict = new Dictionary<string, int>();
-        static private Dictionary<string, string> prodUIDDict = new Dictionary<string, string>();
+        static public Dictionary<string, string> prodUIDDict = new Dictionary<string, string>();
         static private List<string> addUidList = new List<string>();
         //소비자단 flag
         static public bool drawSubFlag = false;
@@ -74,9 +71,11 @@ namespace TagInventory
             {
                 for(int index=0; index < prod_files.Length; index++)
                 {
-                    //prodlist.Items.Add(prod_files[index].ToString());
-                    load_data(prod_files[index].ToString());
+                    string fname = prod_files[index].ToString();
 
+                    //prodlist.Items.Add(prod_files[index].ToString());
+                    load_data(fname);
+       
                 }
             }
             buttonOpen.Enabled = true;
@@ -102,21 +101,13 @@ namespace TagInventory
 
 
             //dataGridViewTag.Rows.Clear();
-            //dataGridViewTag.Rows.Add(1);
+            //dataGridViewTag.Rows.Add(3);
             //dataGridViewTag[0, 0].Value = "123";
             //dataGridViewTag[1, 0].Value = "등록필요";
             //dataGridViewTag[0, 1].Value = "12345";
             //dataGridViewTag[1, 1].Value = "등록필요";
             //dataGridViewTag[0, 2].Value = "1236";
             //dataGridViewTag[1, 2].Value = "등록필요";
-            //dataGridViewTag[0, 3].Value = "12345";
-            //dataGridViewTag[1, 3].Value = "등록필요";
-            //dataGridViewTag[0, 4].Value = "1236";
-            //dataGridViewTag[1, 4].Value = "등록필요";
-
-            //addUidList.Add("123");
-            //addUidList.Add("12345");
-            //addUidList.Add("1236");
 
             int iret = RFIDLIB.rfidlib_reader.RDR_Open(connstr, ref hReader);
             if (iret != 0)
@@ -218,7 +209,6 @@ namespace TagInventory
         void InventoryProc()
         {
             bInventoryFlg = true;
-            coke = 0; coffee = 0; milk = 0; salad = 0; soda = 0;
             while (bInventoryFlg)
             {
                 //uid init
@@ -261,7 +251,14 @@ namespace TagInventory
                        int present_price = 0;
                        for (int c = 0; c < dataGridViewTag.Rows.Count; c++)
                        {
-                           present_price += Int32.Parse(dataGridViewTag[2, c].Value.ToString());
+                           try
+                           {
+                               present_price += Int32.Parse(dataGridViewTag[2, c].Value.ToString());
+                           }catch(Exception eaa)
+                           {
+                               //등록이 안되어있는 상품은 해당 밸류를 parse할 수 없음
+                               continue;
+                           }
                        }
 
                        total_price_tb.Text = (total_price - present_price).ToString();
@@ -320,6 +317,8 @@ namespace TagInventory
                            }
                        }
                    }
+
+
                    string total_str = ToPrettyString(total_dict);
                    total_prod_tb.Text = total_str;
 
@@ -335,8 +334,6 @@ namespace TagInventory
             }));
             
         }
-
-
 
         private void buttonStop_Click(object sender, EventArgs e)
         {
@@ -495,6 +492,22 @@ namespace TagInventory
             }
         }
 
+        public class UidDictClass
+        {
+            [XmlAttribute]
+            public string uid;
+            [XmlAttribute]
+            public string product_name;
+        }
+
+        public class PriceDictClass
+        {
+            [XmlAttribute]
+            public string product_name;
+            [XmlAttribute]
+            public int price;
+        }
+
         /// <summary>
         /// 시리얼라이즈 클래스
         /// </summary>
@@ -564,11 +577,25 @@ namespace TagInventory
         {
             using (Stream prod_data = new FileStream(file_name, FileMode.Open))
             {
-                BinaryFormatter binaryFormatter = new BinaryFormatter();
+                if (file_name == "uids.dat")
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(UidDictClass[]), new XmlRootAttribute() { ElementName = "Uids" });
+                    prodUIDDict = ((UidDictClass[])serializer.Deserialize(prod_data)).ToDictionary(i => i.uid, i => i.product_name);
+                }else if(file_name == "prices.dat")
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(PriceDictClass[]), new XmlRootAttribute() { ElementName = "price" });
+                    prodPriceDict = ((PriceDictClass[])serializer.Deserialize(prod_data)).ToDictionary(o => o.product_name, o => o.price);
+                }
+                else
+                {
+                    BinaryFormatter binaryFormatter = new BinaryFormatter();
+                    Product prod = binaryFormatter.Deserialize(prod_data) as Product;
+                    string str_prod = prod.ToString();
+                    prodlist.Items.Add(str_prod);
+                }
+                
                 //file load
-                Product prod = binaryFormatter.Deserialize(prod_data) as Product;
-                string str_prod = prod.ToString();
-                prodlist.Items.Add(str_prod);
+                
             }
         }
 
