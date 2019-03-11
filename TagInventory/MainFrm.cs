@@ -22,6 +22,7 @@ namespace TagInventory
 
         private bool bInventoryFlg = false;
         private Thread inventoryThrd = null;
+        static private Thread buyThrd = null;
         static private Thread prodThrd = null;
         static private Dictionary<string, int> prodPriceDict = new Dictionary<string, int>();
         static public Dictionary<string, string> prodUIDDict = new Dictionary<string, string>();
@@ -31,7 +32,7 @@ namespace TagInventory
         //이후에 확장가능성 플래그 주석
         ///결제가 붙으면 해당 플래그사용
         static public bool finishSubFlag = false;
-        private bool dataRememberFlag = false;
+        private bool dataRememberFlag = true;
 
         //구매시작시 저장하는 데이터
         string[] fisrt_check_data = new string[] { };
@@ -225,7 +226,6 @@ namespace TagInventory
                 {
                     if (dataRememberFlag == true)
                     {
-                        
                         fisrt_check_data = dataGridViewTag.Rows.OfType<DataGridViewRow>().Select(r => r.Cells[0].Value.ToString()).ToArray();
                         dataRememberFlag = false;
                     }
@@ -290,34 +290,29 @@ namespace TagInventory
                        }
 
                    }
-                    
+         
                    labelTagNumber.Text = uids.Count + "";
                    var except = Enumerable.Except(prodUIDDict.Keys.ToArray(), dataGridViewTag.Rows.OfType<DataGridViewRow>().Select(r => r.Cells[0].Value.ToString()).ToArray());
                    Dictionary<string, string> total_dict = new Dictionary<string, string>();
                    foreach (string uuid in except)
                    {
-                       total_dict.Add(prodUIDDict[uuid], prodPriceDict[prodUIDDict[uuid]].ToString());
+                       total_dict.Add(uuid, prodPriceDict[prodUIDDict[uuid]].ToString());
                    }
-                   var second_check_data = dataGridViewTag.Rows.OfType<DataGridViewRow>().Select(r => r.Cells[0].Value.ToString()).ToArray();
-                   if (drawSubFlag)
+                   try
                    {
-                       if(Enumerable.Except(fisrt_check_data, second_check_data).Count() != 0)
-                       {
-                           SubFrm.dataGridView1.Rows.Clear();
-                           SubFrm.dataGridView1.Rows.Add(Enumerable.Except(fisrt_check_data, second_check_data).Count());
-                           int count = 0;
-                           int total_price_sub = 0;
-                           foreach(string subuid in Enumerable.Except(fisrt_check_data, second_check_data))
-                           {
-                               SubFrm.dataGridView1[0, count].Value = prodUIDDict[subuid].ToString();
-                               SubFrm.dataGridView1[1, count].Value = prodPriceDict[prodUIDDict[subuid].ToString()].ToString();
-                               total_price_sub += prodPriceDict[prodUIDDict[subuid].ToString()];
-                               SubFrm.total_price.Text = total_price_sub.ToString();
-                               count++;
-                           }
-                       }
-                   }
+                       var second_check_data = dataGridViewTag.Rows.OfType<DataGridViewRow>().Select(r => r.Cells[0].Value.ToString()).ToArray();
 
+                       if (drawSubFlag)
+                       {
+                           Mapping map = new Mapping(fisrt_check_data, second_check_data);
+                           buyThrd = new Thread(map.ThreadBuy);
+                           buyThrd.Start();
+                           buyThrd.Join();
+                       }
+                   }catch(Exception e)
+                   {
+                       MessageBox.Show(e.Message.ToString());
+                   }
 
                    string total_str = ToPrettyString(total_dict);
                    total_prod_tb.Text = total_str;
@@ -369,10 +364,12 @@ namespace TagInventory
                 prodThrd = new Thread(map.ThreadProd);
                 prodThrd.Start();
                 prodThrd.Join();
+
                 this.Invoke((EventHandler)(delegate
                 {
                     try
                     {
+                        //inventoryThrd = null;
                         datagrid_close();
                         datagrid_start();
                     }
@@ -460,12 +457,48 @@ namespace TagInventory
             // State information used in the task.
             private string prod;
             private int price;
+            private string[] first_check_data;
+            private string[] second_check_data;
+
             // The constructor obtains the state information.
             public Mapping(string prod, int price)
             {
                 this.prod = prod;
                 this.price = price;
 
+            }
+
+            public Mapping(string[] first_check_data, string[] second_check_data)
+            {
+                this.first_check_data = first_check_data;
+                this.second_check_data = second_check_data;
+            }
+
+            public void ThreadBuy()
+            {
+                try
+                {
+                    if (Enumerable.Except(first_check_data, second_check_data).Count() != 0)
+                    {
+                        SubFrm.dataGridView1.Rows.Clear();
+                        SubFrm.dataGridView1.Rows.Add(Enumerable.Except(first_check_data, second_check_data).Count());
+                        int count = 0;
+                        int total_price_sub = 0;
+                        foreach (string subuid in Enumerable.Except(first_check_data, second_check_data))
+                        {
+                            SubFrm.dataGridView1[0, count].Value = prodUIDDict[subuid].ToString();
+                            SubFrm.dataGridView1[1, count].Value = prodPriceDict[prodUIDDict[subuid].ToString()].ToString();
+                            total_price_sub += prodPriceDict[prodUIDDict[subuid].ToString()];
+                            SubFrm.total_price.Text = total_price_sub.ToString();
+                            count++;
+                        }
+                    }
+                }catch(Exception e)
+                {
+                    MessageBox.Show("오류");
+                }
+                buyThrd = null;
+                
             }
 
             public void ThreadProd()
@@ -535,10 +568,13 @@ namespace TagInventory
                 MessageBox.Show("기존 등록된 물품을 선택해주십시오");
                 return;
             }
-            string[] prod_arr = prodlist.SelectedItem.ToString().Split(':');
+            string[] prod_arr =prod_string.Split(':');
             string prod_name = prod_arr[0].Trim();
             string prod_price = prod_arr[1].Trim();
-            prod_button_function(prod_name, prod_price);
+            this.Invoke((EventHandler)(delegate
+            {
+                prod_button_function(prod_name, prod_price);
+            }));
 
         }
 
@@ -567,7 +603,7 @@ namespace TagInventory
             }
             finally
             {
-                prodlist.Items.Add($"{nametxt.Text} : {pricetxt.Text}원");
+                prodlist.Items.Add($"{nametxt.Text} : {pricetxt.Text}");
                 SubFrm.상품.Items.Add($"{nametxt.Text} : {pricetxt.Text}원");
             }
 
@@ -604,7 +640,7 @@ namespace TagInventory
             var str = new StringBuilder();
             foreach (var pair in dict)
             {
-                str.Append(String.Format("{0} {1} 개, ", pair.Key, pair.Value));
+                str.Append(String.Format("{0} {1} 원, ", prodUIDDict[pair.Key], pair.Value));
             }
             return str.ToString();
         }
