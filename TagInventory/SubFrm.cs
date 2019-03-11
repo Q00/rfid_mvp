@@ -67,17 +67,13 @@ namespace TagInventory
             {
                 MainFrm.drawSubFlag = false;
                 MainFrm.finishSubFlag = true;
-                
-            }));
-
-            this.Invoke((EventHandler)(delegate
-            {
-                for(int count =0; count <dataGridView1.Rows.Count; count++)
+                for (int count = 0; count < dataGridView1.Rows.Count; count++)
                 {
                     string uid = dataGridView1[0, count].Value.ToString();
                     MainFrm.prodUIDDict.Remove(uid);
                 }
             }));
+
 
             MessageBox.Show(total_price + "원 구매완료");
 
