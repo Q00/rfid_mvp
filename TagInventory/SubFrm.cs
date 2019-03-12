@@ -66,17 +66,14 @@ namespace TagInventory
             this.Invoke((EventHandler)(delegate
             {
                 MainFrm.drawSubFlag = false;
-                MainFrm.finishSubFlag = true;
-                for (int count = 0; count < dataGridView1.Rows.Count; count++)
-                {
-                    string uid = dataGridView1[0, count].Value.ToString();
-                    MainFrm.prodUIDDict.Remove(uid);
-                }
+                //MainFrm.finishSubFlag = true;
+                
             }));
 
 
-            MessageBox.Show(total_price + "원 구매완료");
-
+            MessageBox.Show(total_price.Text + "원 구매완료");
+            total_price.Text = "0";
+            dataGridView1.Rows.Clear();
             this.buy_start.Enabled = true;
             this.finish_button.Enabled = false;
         }
